@@ -1,3 +1,8 @@
+const spriteWidth = 101;
+const spriteHeight = 83;
+const numRows = 6;
+const numCols = 6;
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -5,7 +10,7 @@ var Enemy = function() {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
-    this.sprite = 'images/enemy-bug.png';
+    this.init();
 };
 
 // Update the enemy's position, required method for game
@@ -14,7 +19,19 @@ Enemy.prototype.update = function(dt) {
     // You should multiply any movement by the dt parameter
     // which will ensure the game runs at the same speed for
     // all computers.
+    this.x += this.speed*dt;
+    if (this.x > spriteWidth * (numCols - 1)) {
+        this.init();
+    }
 };
+
+Enemy.prototype.init = function() {
+    this.sprite = 'images/enemy-bug.png';
+    this.x = -spriteWidth;
+    this.y = spriteHeight*(Math.floor(Math.random()*3) + 1) - 20;
+    this.speed = Math.floor(Math.random()*400) + 100;
+};
+
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
@@ -29,7 +46,13 @@ Enemy.prototype.render = function() {
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
 // Place the player object in a variable called player
-
+var allEnemies = [];
+var e0 = new Enemy();
+allEnemies.push(e0);
+var e1 = new Enemy();
+allEnemies.push(e1);
+var e2 = new Enemy();
+allEnemies.push(e2);
 
 
 // This listens for key presses and sends the keys to your
