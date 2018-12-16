@@ -3,6 +3,14 @@ const spriteHeight = 83;
 const numRows = 6;
 const numCols = 6;
 
+var playerImgages = [
+    'images/char-boy.png',
+    'images/char-cat-girl.png',
+    'images/char-horn-girl.png',
+    'images/char-pink-girl.png',
+    'images/char-princess-girl.png'
+];
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -42,6 +50,33 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 
+var Player = function() {
+    // this.sprite = playerImgages[Math.floor(Math.random()*5)];
+    this.sprite = 'images/char-boy.png';
+    this.x = spriteWidth*(Math.floor(numCols/2));
+    this.y = spriteHeight*4 - 20;
+};
+
+Player.prototype.update = function() {
+    if (this.controlKey === 'left' && this.x > 0) {
+        this.x -= spriteWidth;
+    } else if (this.controlKey === 'right' && this.x < spriteWidth*(numCols-2)) {
+        this.x += spriteWidth;
+    } else if (this.controlKey === 'up' && this.y > 0) {
+        this.y -= spriteHeight;
+    } else if (this.controlKey === 'down' && this.y < spriteHeight*(numRows-2)) {
+        this.y += spriteHeight;
+    }
+    this.controlKey = null;
+};
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
+Player.prototype.handleInput = function(key) {
+    this.controlKey = key;
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called allEnemies
@@ -54,6 +89,7 @@ allEnemies.push(e1);
 var e2 = new Enemy();
 allEnemies.push(e2);
 
+var player = new Player();
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
