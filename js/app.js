@@ -58,7 +58,7 @@ Player.prototype.init = function() {
 Player.prototype.update = function() {
     if (this.controlKey === 'left' && this.x > 0) {
         this.x -= spriteWidth;
-    } else if (this.controlKey === 'right' && this.x < spriteWidth*(numCols-2)) {
+    } else if (this.controlKey === 'right' && this.x < spriteWidth*(numCols-1)) {
         this.x += spriteWidth;
     } else if (this.controlKey === 'up' && this.y > 0) {
         this.y -= spriteHeight;
