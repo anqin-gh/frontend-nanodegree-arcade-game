@@ -1,8 +1,3 @@
-const spriteWidth = 101;
-const spriteHeight = 83;
-const numRows = 6;
-const numCols = 6;
-
 var playerImgages = [
     'images/char-boy.png',
     'images/char-cat-girl.png',
@@ -49,8 +44,11 @@ Enemy.prototype.render = function() {
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
-
 var Player = function() {
+    this.init();
+};
+
+Player.prototype.init = function() {
     // this.sprite = playerImgages[Math.floor(Math.random()*5)];
     this.sprite = 'images/char-boy.png';
     this.x = spriteWidth*(Math.floor(numCols/2));

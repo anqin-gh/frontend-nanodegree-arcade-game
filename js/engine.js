@@ -79,7 +79,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        checkCollisions(dt);
     }
 
     /* This is called by the update function and loops through all of the
@@ -94,6 +94,15 @@ var Engine = (function(global) {
             enemy.update(dt);
         });
         player.update();
+    }
+
+    function checkCollisions(dt) {
+        allEnemies.forEach(function(e) {
+            if (    Math.abs(e.x - player.x) - spriteWidth/1.3 < e.speed*dt
+                &&  e.y === player.y) {
+                player.init();
+            }
+        });
     }
 
     /* This function initially draws the "game level", it will then call
@@ -114,8 +123,6 @@ var Engine = (function(global) {
                 'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
-            numRows = 6,
-            numCols = 5,
             row, col;
 
         // Before drawing, clear existing canvas
