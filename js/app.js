@@ -49,8 +49,7 @@ var Player = function() {
 };
 
 Player.prototype.init = function() {
-    // this.sprite = playerImgages[Math.floor(Math.random()*5)];
-    this.sprite = 'images/char-boy.png';
+    this.sprite = playerImgages[Math.floor(Math.random()*5)];
     this.x = spriteWidth*(Math.floor(numCols/2));
     this.y = spriteHeight*4 - 20;
 };
