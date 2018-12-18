@@ -186,6 +186,25 @@ Gem.prototype.reset = function() {
     })();
 };
 
+var Scoreboard = function() {
+    GameObject.call(this);
+};
+
+Scoreboard.prototype = Object.create(GameObject.prototype);
+
+Scoreboard.prototype.update = function() {
+    this.score = player.score;
+    this.lives = player.lives;
+};
+
+Scoreboard.prototype.render = function() {
+    ctx.font = "20px Helvetica";
+    ctx.fillText("Score: " + this.score, 15, 610);
+    ctx.fillText("Lives: " + this.lives, blockWidth*(numCols-1) + 15, 610);
+};
+
+
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called gameObjects
 // Place the player object in a variable called player
@@ -197,6 +216,8 @@ gameObjects.push(new Enemy());
 
 gameObjects.push(new Heart());
 gameObjects.push(new Gem());
+
+gameObjects.push(new Scoreboard());
 
 var player = new Player();
 gameObjects.push(player);
@@ -210,6 +231,6 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-
+    
     player.handleInput(allowedKeys[e.keyCode]);
 });
