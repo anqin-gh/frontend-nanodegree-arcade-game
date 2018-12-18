@@ -120,6 +120,35 @@ Player.prototype.handleInput = function(key) {
     this.controlKey = key;
 };
 
+var Heart = function() {
+    GameObject.call(this);
+    this.init();
+};
+
+Heart.prototype = Object.create(GameObject.prototype);
+
+Heart.prototype.isHeart = function() {
+    return true;
+};
+
+Heart.prototype.init = function() {
+    this.sprite = 'images/Heart.png';
+    this.reset();
+};
+
+Heart.prototype.reset = function() { // set initial location
+    this.x = blockWidth*Math.floor(Math.random()*5);
+    this.y = blockHeight*(Math.floor(Math.random()*3) + 1);
+};
+
+Heart.prototype.update = function() {
+    // do nothing, it's always in the same position
+};
+
+Heart.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+};
+
 // Now instantiate your objects.
 // Place all enemy objects in an array called gameObjects
 // Place the player object in a variable called player
@@ -128,6 +157,8 @@ var gameObjects = [];
 gameObjects.push(new Enemy());
 gameObjects.push(new Enemy());
 gameObjects.push(new Enemy());
+
+gameObjects.push(new Heart());
 
 var player = new Player();
 gameObjects.push(player);
