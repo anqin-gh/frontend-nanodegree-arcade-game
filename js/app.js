@@ -21,6 +21,10 @@ GameObject.prototype = {
     isGem:      function() { return false; }
 };
 
+GameObject.prototype.init = function() {
+    // do nothing by default
+};
+
 GameObject.prototype.update = function() {
     // do nothing by default
 };
@@ -187,23 +191,32 @@ Gem.prototype.reset = function() {
 };
 
 var Scoreboard = function() {
-    GameObject.call(this);
+
 };
 
-Scoreboard.prototype = Object.create(GameObject.prototype);
-
-Scoreboard.prototype.update = function() {
+Scoreboard.update = function() {
     this.score = player.score;
     this.lives = player.lives;
 };
 
-Scoreboard.prototype.render = function() {
+Scoreboard.render = function() {
     ctx.font = "20px Helvetica";
     ctx.fillText("Score: " + this.score, 15, 610);
     ctx.fillText("Lives: " + this.lives, blockWidth*(numCols-1) + 15, 610);
 };
 
+var GameOver = function() {
 
+};
+
+GameOver.render = function() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.75)";
+    ctx.fillRect(0, 50, 505, 539);
+
+    ctx.font = "50px Helvetica";
+    ctx.fillStyle = "white";
+    ctx.fillText("GAME OVER", 100, 630/2);
+};
 
 // Now instantiate your objects.
 // Place all enemy objects in an array called gameObjects
@@ -217,8 +230,6 @@ gameObjects.push(new Enemy());
 gameObjects.push(new Heart());
 gameObjects.push(new Gem());
 
-gameObjects.push(new Scoreboard());
-
 var player = new Player();
 gameObjects.push(player);
 
@@ -231,6 +242,6 @@ document.addEventListener('keyup', function(e) {
         39: 'right',
         40: 'down'
     };
-    
+
     player.handleInput(allowedKeys[e.keyCode]);
 });

@@ -24,5 +24,11 @@ If you want to use it, simply clone or download this repository and open the ind
 You can also play [here](https://anqin-gh.github.io/frontend-nanodegree-arcade-game/).
 
 ### How to play:
-* Player must reach water to win the game without colliding with Enemy-bugs
-* Only 5 collisions are allowed, else Game will be over!
+* Player must collect gems and reach the water in order to collect points.
+	Each item has a different value:
+	* water:       30 points
+    * orange gem:  25 points
+    * blue gem:    50 points
+    * green gem:   75 points
+
+* You must avoid bugs, otherwise you'll die. You have three lives on start but can collect more as they appear.

@@ -55,7 +55,8 @@ var Engine = (function(global) {
         /* Use the browser's requestAnimationFrame function to call this
          * function again as soon as the browser is able to draw another frame.
          */
-        win.requestAnimationFrame(main);
+        if (player.isAlive()) win.requestAnimationFrame(main);
+        else reset();
     }
 
     /* This function does some initial setup that should only occur once,
@@ -78,8 +79,8 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        updateEntities(dt);
         checkCollisions(dt);
+        updateEntities(dt);
     }
 
     /* This is called by the update function and loops through all of the
@@ -93,6 +94,7 @@ var Engine = (function(global) {
         gameObjects.forEach(function(o) {
             o.update(dt);
         });
+        Scoreboard.update();
     }
 
     function checkCollisions(dt) {
@@ -101,26 +103,21 @@ var Engine = (function(global) {
                 if (o.y === -verticalOffset) { // player reaches water
                     player.reset();
                     player.score += scores.goal;
-                    console.log("score: " + player.score);
                 }
             } else if (o.isMortal()) { // player collides with enemy
                 if (    o.y === player.y
                     &&  Math.abs(o.x - player.x) - blockWidth/1.3 < o.speed*dt) {
                     player.lives--;
-                    console.log("lives: " + player.lives);
-                    if (player.isAlive()) player.reset();
-                    else reset();
+                    player.reset();
                 }
             } else if (o.isHeart()) {
                 if (o.x === player.x && o.y === (player.y + verticalOffset)) {
                     player.lives++;
-                    console.log("lives: " + player.lives);
                     o.reset();
                 }
             } else if (o.isGem()) {
                 if (o.x === player.x && o.y === (player.y)) {
                     player.score += o.score;
-                    console.log("score: " + player.score);
                     o.reset();
                 }
             }
@@ -181,6 +178,7 @@ var Engine = (function(global) {
         gameObjects.forEach(function(o) {
             o.render();
         });
+        Scoreboard.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -188,8 +186,12 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        console.log("game over");
-        player.init();
+        if (!player.isAlive()) {
+            GameOver.render();
+        }
+        gameObjects.forEach(function(o){
+            o.init();
+        });
     }
 
     /* Go ahead and load all of the images we know we're going to need to
