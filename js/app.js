@@ -173,7 +173,7 @@ Gem.prototype.init = function() {
 Gem.prototype.reset = function() {
     this.x = blockWidth*Math.floor(Math.random()*numCols);
     this.y = blockHeight*(Math.floor(Math.random()*3) + 1) - verticalOffset;
-    var randIdx = Math.floor(Math.random()*gemImages.length);
+    var randIdx =[0, 0, 0, 1, 1, 2][Math.floor(Math.random()*6)];
     this.sprite = gemImages[randIdx];
     this.score = (function() {
         switch (randIdx) {
