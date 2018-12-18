@@ -101,21 +101,28 @@ var Engine = (function(global) {
                 if (o.y === -verticalOffset) { // player reaches water
                     player.reset();
                     player.score += scores.goal;
+                    console.log("score: " + player.score);
                 }
             } else if (o.isMortal()) { // player collides with enemy
                 if (    o.y === player.y
                     &&  Math.abs(o.x - player.x) - blockWidth/1.3 < o.speed*dt) {
                     player.lives--;
+                    console.log("lives: " + player.lives);
                     if (player.isAlive()) player.reset();
                     else reset();
                 }
             } else if (o.isHeart()) {
                 if (o.x === player.x && o.y === (player.y + verticalOffset)) {
                     player.lives++;
+                    console.log("lives: " + player.lives);
                     o.reset();
                 }
             } else if (o.isGem()) {
-
+                if (o.x === player.x && o.y === (player.y)) {
+                    player.score += o.score;
+                    console.log("score: " + player.score);
+                    o.reset();
+                }
             }
         });
     }
@@ -181,9 +188,8 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        player.score = 0;
-        player.lives = 3;
         console.log("game over");
+        player.init();
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -199,9 +205,14 @@ var Engine = (function(global) {
         'images/char-cat-girl.png',
         'images/char-horn-girl.png',
         'images/char-pink-girl.png',
-        'images/char-princess-girl.png'
-
+        'images/char-princess-girl.png',
+        'images/Gem Blue.png',
+        'images/Gem Green.png',
+        'images/Gem Orange.png',
+        'images/grass-block.png',
+        'images/Heart.png'
     ]);
+
     Resources.onReady(init);
 
     /* Assign the canvas' context object to the global variable (the window

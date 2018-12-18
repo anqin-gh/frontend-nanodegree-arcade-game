@@ -3,6 +3,12 @@ const blockHeight = 83;
 const numRows = 6;
 const numCols = 5;
 const verticalOffset = 20;
+const scores = {
+    goal:       30,
+    orangeGem:  25,
+    blueGem:    50,
+    greenGem:   75
+};
 
 // superclass defining common interface
 var GameObject = function() {
@@ -13,6 +19,14 @@ GameObject.prototype = {
     isPlayer:   function() { return false; },
     isHeart:    function() { return false; },
     isGem:      function() { return false; }
+};
+
+GameObject.prototype.update = function() {
+    // do nothing by default
+};
+
+GameObject.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
 // Enemies our player must avoid
@@ -55,12 +69,6 @@ Enemy.prototype.reset = function() {
     this.speed = Math.floor(Math.random()*400) + 100;
 };
 
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
-
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
@@ -84,7 +92,7 @@ var playerImgages = [
 ];
 
 Player.prototype.init = function() {
-    this.sprite = playerImgages[Math.floor(Math.random()*5)];
+    this.sprite = playerImgages[Math.floor(Math.random()*playerImgages.length)];
     this.lives = 3;
     this.score = 0;
     this.reset();
@@ -112,10 +120,6 @@ Player.prototype.update = function() {
     this.controlKey = null;
 };
 
-Player.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-};
-
 Player.prototype.handleInput = function(key) {
     this.controlKey = key;
 };
@@ -137,16 +141,49 @@ Heart.prototype.init = function() {
 };
 
 Heart.prototype.reset = function() { // set initial location
-    this.x = blockWidth*Math.floor(Math.random()*5);
+    this.x = blockWidth*Math.floor(Math.random()*numCols);
     this.y = blockHeight*(Math.floor(Math.random()*3) + 1);
 };
 
-Heart.prototype.update = function() {
-    // do nothing, it's always in the same position
+var Gem = function() {
+    GameObject.call(this);
+    this.init();
 };
 
-Heart.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
+Gem.prototype = Object.create(GameObject.prototype);
+
+Gem.prototype.isGem = function() {
+    return true;
+};
+
+var gemImages = [
+    'images/Gem Orange.png',
+    'images/Gem Blue.png',
+    'images/Gem Green.png'
+];
+
+Gem.prototype.init = function() {
+    this.reset();
+};
+
+Gem.prototype.reset = function() {
+    this.x = blockWidth*Math.floor(Math.random()*numCols);
+    this.y = blockHeight*(Math.floor(Math.random()*3) + 1) - verticalOffset;
+    var randIdx = Math.floor(Math.random()*gemImages.length);
+    this.sprite = gemImages[randIdx];
+    this.score = (function() {
+        switch (randIdx) {
+            case 0:
+                return scores.orangeGem;
+                break;
+            case 1:
+                return scores.blueGem;
+                break;
+            case 2:
+                return scores.greenGem;
+                break;
+        }
+    })();
 };
 
 // Now instantiate your objects.
@@ -159,6 +196,7 @@ gameObjects.push(new Enemy());
 gameObjects.push(new Enemy());
 
 gameObjects.push(new Heart());
+gameObjects.push(new Gem());
 
 var player = new Player();
 gameObjects.push(player);
