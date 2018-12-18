@@ -4,6 +4,17 @@ const numRows = 6;
 const numCols = 5;
 const verticalOffset = 20;
 
+// superclass defining common interface
+var GameObject = function() {
+};
+
+GameObject.prototype = {
+    isMortal:   function() { return false; },
+    isPlayer:   function() { return false; },
+    isHeart:    function() { return false; },
+    isGem:      function() { return false; }
+};
+
 // Enemies our player must avoid
 var Enemy = function() {
     // Variables applied to each of our instances go here,
@@ -11,7 +22,14 @@ var Enemy = function() {
 
     // The image/sprite for our enemies, this uses
     // a helper we've provided to easily load images
+    GameObject.call(this);
     this.init();
+};
+
+Enemy.prototype = Object.create(GameObject.prototype);
+
+Enemy.prototype.isMortal = function() {
+    return true;
 };
 
 Enemy.prototype.init = function() {
@@ -47,7 +65,14 @@ Enemy.prototype.render = function() {
 // This class requires an update(), render() and
 // a handleInput() method.
 var Player = function() {
+    GameObject.call(this);
     this.init();
+};
+
+Player.prototype = Object.create(GameObject.prototype);
+
+Player.prototype.isPlayer = function() {
+    return true;
 };
 
 var playerImgages = [
@@ -63,6 +88,10 @@ Player.prototype.init = function() {
     this.lives = 3;
     this.score = 0;
     this.reset();
+};
+
+Player.prototype.isAlive = function() {
+    return this.lives > 0;
 };
 
 Player.prototype.reset = function() {
@@ -92,17 +121,16 @@ Player.prototype.handleInput = function(key) {
 };
 
 // Now instantiate your objects.
-// Place all enemy objects in an array called allEnemies
+// Place all enemy objects in an array called gameObjects
 // Place the player object in a variable called player
-var allEnemies = [];
-var e0 = new Enemy();
-allEnemies.push(e0);
-var e1 = new Enemy();
-allEnemies.push(e1);
-var e2 = new Enemy();
-allEnemies.push(e2);
+var gameObjects = [];
+
+gameObjects.push(new Enemy());
+gameObjects.push(new Enemy());
+gameObjects.push(new Enemy());
 
 var player = new Player();
+gameObjects.push(player);
 
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.

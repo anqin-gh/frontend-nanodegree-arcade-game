@@ -83,24 +83,39 @@ var Engine = (function(global) {
     }
 
     /* This is called by the update function and loops through all of the
-     * objects within your allEnemies array as defined in app.js and calls
+     * objects within your gameObjects array as defined in app.js and calls
      * their update() methods. It will then call the update function for your
      * player object. These update methods should focus purely on updating
      * the data/properties related to the object. Do your drawing in your
      * render methods.
      */
     function updateEntities(dt) {
-        allEnemies.forEach(function(enemy) {
-            enemy.update(dt);
+        gameObjects.forEach(function(o) {
+            o.update(dt);
         });
-        player.update();
     }
 
     function checkCollisions(dt) {
-        allEnemies.forEach(function(e) {
-            if (    Math.abs(e.x - player.x) - spriteWidth/1.3 < e.speed*dt
-                &&  e.y === player.y) {
-                player.init();
+        gameObjects.forEach(function(o) {
+            if (o.isPlayer()) {
+                if (o.y === -verticalOffset) { // player reaches water
+                    player.reset();
+                    player.score += scores.goal;
+                }
+            } else if (o.isMortal()) { // player collides with enemy
+                if (    o.y === player.y
+                    &&  Math.abs(o.x - player.x) - blockWidth/1.3 < o.speed*dt) {
+                    player.lives--;
+                    if (player.isAlive()) player.reset();
+                    else reset();
+                }
+            } else if (o.isHeart()) {
+                if (o.x === player.x && o.y === (player.y + verticalOffset)) {
+                    player.lives++;
+                    o.reset();
+                }
+            } else if (o.isGem()) {
+
             }
         });
     }
@@ -153,14 +168,12 @@ var Engine = (function(global) {
      * on your enemy and player entities within app.js
      */
     function renderEntities() {
-        /* Loop through all of the objects within the allEnemies array and call
+        /* Loop through all of the objects within the gameObjects array and call
          * the render function you have defined.
          */
-        allEnemies.forEach(function(enemy) {
-            enemy.render();
+        gameObjects.forEach(function(o) {
+            o.render();
         });
-
-        player.render();
     }
 
     /* This function does nothing but it could have been a good place to
@@ -168,8 +181,9 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        // noop
-
+        player.score = 0;
+        player.lives = 3;
+        console.log("game over");
     }
 
     /* Go ahead and load all of the images we know we're going to need to
