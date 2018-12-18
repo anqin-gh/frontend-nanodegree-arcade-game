@@ -1,10 +1,8 @@
-var playerImgages = [
-    'images/char-boy.png',
-    'images/char-cat-girl.png',
-    'images/char-horn-girl.png',
-    'images/char-pink-girl.png',
-    'images/char-princess-girl.png'
-];
+const blockWidth = 101;
+const blockHeight = 83;
+const numRows = 6;
+const numCols = 5;
+const verticalOffset = 20;
 
 // Enemies our player must avoid
 var Enemy = function() {
@@ -16,6 +14,11 @@ var Enemy = function() {
     this.init();
 };
 
+Enemy.prototype.init = function() {
+    this.sprite = 'images/enemy-bug.png';
+    this.reset();
+};
+
 // Update the enemy's position, required method for game
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
@@ -23,23 +26,22 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
     this.x += this.speed*dt;
-    if (this.x > spriteWidth * numCols) {
-        this.init();
+    if (this.x > blockWidth * numCols) {
+        this.reset();
     }
 };
 
-Enemy.prototype.init = function() {
-    this.sprite = 'images/enemy-bug.png';
-    this.x = -spriteWidth;
-    this.y = spriteHeight*(Math.floor(Math.random()*3) + 1) - 20;
+Enemy.prototype.reset = function() {
+    this.x = -blockWidth;
+    this.y = blockHeight*(Math.floor(Math.random()*3) + 1) - verticalOffset;
     this.speed = Math.floor(Math.random()*400) + 100;
 };
-
 
 // Draw the enemy on the screen, required method for game
 Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
+
 
 // Now write your own player class
 // This class requires an update(), render() and
@@ -48,21 +50,35 @@ var Player = function() {
     this.init();
 };
 
+var playerImgages = [
+    'images/char-boy.png',
+    'images/char-cat-girl.png',
+    'images/char-horn-girl.png',
+    'images/char-pink-girl.png',
+    'images/char-princess-girl.png'
+];
+
 Player.prototype.init = function() {
     this.sprite = playerImgages[Math.floor(Math.random()*5)];
-    this.x = spriteWidth*(Math.floor(numCols/2));
-    this.y = spriteHeight*4 - 20;
+    this.lives = 3;
+    this.score = 0;
+    this.reset();
+};
+
+Player.prototype.reset = function() {
+    this.x = blockWidth*(Math.floor(numCols/2));
+    this.y = blockHeight*4 - verticalOffset;
 };
 
 Player.prototype.update = function() {
     if (this.controlKey === 'left' && this.x > 0) {
-        this.x -= spriteWidth;
-    } else if (this.controlKey === 'right' && this.x < spriteWidth*(numCols-1)) {
-        this.x += spriteWidth;
+        this.x -= blockWidth;
+    } else if (this.controlKey === 'right' && this.x < blockWidth*(numCols-1)) {
+        this.x += blockWidth;
     } else if (this.controlKey === 'up' && this.y > 0) {
-        this.y -= spriteHeight;
-    } else if (this.controlKey === 'down' && this.y < spriteHeight*(numRows-2)) {
-        this.y += spriteHeight;
+        this.y -= blockHeight;
+    } else if (this.controlKey === 'down' && this.y < blockHeight*(numRows-2)) {
+        this.y += blockHeight;
     }
     this.controlKey = null;
 };
