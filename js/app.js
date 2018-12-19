@@ -246,3 +246,10 @@ document.addEventListener('keyup', function(e) {
 
     player.handleInput(allowedKeys[e.keyCode]);
 });
+
+$(document).keydown(function(e){
+    var keys = [37, 38, 39, 40];
+    if (keys.indexOf(e.which) > -1) {
+        e.preventDefault();
+    }
+});
