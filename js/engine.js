@@ -59,7 +59,7 @@ var Engine = (function(global) {
         else {
             GameOver.render();
             $(doc).on('keypress', function(e){
-                if (e.keyCode === 32) init();
+                if (e.which === 32) init();
             });
         }
     }
