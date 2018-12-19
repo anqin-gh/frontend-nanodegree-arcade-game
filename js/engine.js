@@ -56,7 +56,12 @@ var Engine = (function(global) {
          * function again as soon as the browser is able to draw another frame.
          */
         if (player.isAlive()) win.requestAnimationFrame(main);
-        else reset();
+        else {
+            GameOver.render();
+            doc.addEventListener('keypress', function(e){
+                if (e.keyCode === 32) init();
+            });
+        }
     }
 
     /* This function does some initial setup that should only occur once,
@@ -79,8 +84,9 @@ var Engine = (function(global) {
      * on the entities themselves within your app.js file).
      */
     function update(dt) {
-        checkCollisions(dt);
         updateEntities(dt);
+        checkCollisions(dt);
+        Scoreboard.update();
     }
 
     /* This is called by the update function and loops through all of the
@@ -94,7 +100,6 @@ var Engine = (function(global) {
         gameObjects.forEach(function(o) {
             o.update(dt);
         });
-        Scoreboard.update();
     }
 
     function checkCollisions(dt) {
@@ -105,10 +110,11 @@ var Engine = (function(global) {
                     player.score += scores.goal;
                 }
             } else if (o.isMortal()) { // player collides with enemy
-                if (    o.y === player.y
+                if (    player.isAlive()
+                    &&  o.y === player.y
                     &&  Math.abs(o.x - player.x) - blockWidth/1.3 < o.speed*dt) {
-                    player.lives--;
-                    player.reset();
+                        player.lives--;
+                        if (player.isAlive()) player.reset();
                 }
             } else if (o.isHeart()) {
                 if (o.x === player.x && o.y === (player.y + verticalOffset)) {
@@ -186,9 +192,6 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
-        if (!player.isAlive()) {
-            GameOver.render();
-        }
         gameObjects.forEach(function(o){
             o.init();
         });

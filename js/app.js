@@ -201,6 +201,7 @@ Scoreboard.update = function() {
 
 Scoreboard.render = function() {
     ctx.font = "20px Helvetica";
+    ctx.fillStyle = "black";
     ctx.fillText("Score: " + this.score, 15, 610);
     ctx.fillText("Lives: " + this.lives, blockWidth*(numCols-1) + 15, 610);
 };
