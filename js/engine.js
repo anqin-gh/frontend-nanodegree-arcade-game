@@ -58,7 +58,7 @@ var Engine = (function(global) {
         if (player.isAlive()) win.requestAnimationFrame(main);
         else {
             GameOver.render();
-            doc.addEventListener('keypress', function(e){
+            $(doc).on('keypress', function(e){
                 if (e.keyCode === 32) init();
             });
         }
@@ -192,6 +192,7 @@ var Engine = (function(global) {
      * those sorts of things. It's only called once by the init() method.
      */
     function reset() {
+        $(doc).off('keypress');
         gameObjects.forEach(function(o){
             o.init();
         });
